@@ -2,18 +2,14 @@
 
 namespace Feather\Components\Collections
 {
-    interface IBasicCollection
+    interface ISimpleCollection
     {
-        public function add($key, $value);
+        public function add($value);
         public function remove($key);
         public function clear();
-        public function contains($key);
+        public function contains($value);
         public function get($key);
         public function first();
         public function last();
-        
-        //public function find(array $parms);
-        
-        //public function __toString();
     }
 }

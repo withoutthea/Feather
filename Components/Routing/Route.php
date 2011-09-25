@@ -10,11 +10,15 @@
  */
 namespace Feather\Components\Routing
 {
-    class Route {
+    class Route implements \Iterator, \Countable, \Feather\App\Domain\IObject
+    {
 
         protected $url;
-        protected $mapping;
-        protected $constraints;
+        public $segments;
+        public $mapping;
+        public $constraints;
+        
+        private $_id = 0;
 
         /**
          * Constructor
@@ -25,9 +29,10 @@ namespace Feather\Components\Routing
          */
         public function __construct($url, array $mappings = array(), array $constraints = array())
         {
-            $this->setUrl($url);
-            $this->setMapping($mappings);
             $this->setConstraints($constraints);
+            $this->setMapping($mappings);
+            
+            $this->setUrl($url);
         }
 
         /**
@@ -38,13 +43,46 @@ namespace Feather\Components\Routing
          */
         public function setUrl($url)
         {
-            // url must start and end with '/'
+            // url must start with '/'
             if('/' !== $url[0]) $url = '/' . $url;
 
             // url should not end with '/'
             if('/' === substr($url, -1)) $url = substr($url, 0, -1);
 
+            // set the url
             $this->url = $url;
+            
+            // set the individual segments
+            $segments = explode('/', substr($this->url, 1));
+            
+            for ($i = 0; $i < count($segments); $i++)
+            {
+                $seg = $segments[$i];
+                
+                // wildcard segment (must be end)
+                if ($seg == '*')
+                {
+                    $this->addSegment($i, $seg);
+                    break;
+                }
+                
+                // segment is regex
+                if ($seg[0] == '#')
+                {
+                    $this->addSegment($i, $seg);
+                    continue;
+                }
+                
+                // segment is a constraint
+                if (preg_match('/\{(.*)\}/', $seg, $matches))
+                {
+                    $this->addSegment($i, '#^' . $this->getConstraint($matches[1]) . '$#');
+                    continue;
+                }
+                
+                // segment is straight text
+                $this->addSegment($i, '#^' . $seg . '$#');
+            }
 
             return $this;
         }
@@ -114,6 +152,72 @@ namespace Feather\Components\Routing
                 'year' => '[0-9]{4}'
                 // @TODO -> Add more items here (YYYY-MM-dd, for instance)
             ), $constraints);
+        }
+        
+        public function getConstraint($constraint)
+        {
+            return $this->constraints[$constraint];
+        }
+        
+        private function addSegment($part, $constraint)
+        {
+            $this->segments[$part] = $constraint;
+        }
+        
+        public function getSegment($part)
+        {
+            if ($part === 'first') $part = 0;
+            if ($part === 'last') $part = count($this->segments) - 1;
+            
+            if (isset($this->segments[$part]))
+            {
+                return $this->segments[$part];
+            }
+            
+            return false;
+        }
+        
+        public function __toString()
+        {
+            // @TODO -> Implement
+        }
+        
+        /**
+         * SPL Iterator pattern
+         */
+        
+        public function current()
+        {
+            return $this->segments[$this->_id];
+        }
+
+        public function key()
+        {
+            return $this->_id;
+        }
+
+        public function next()
+        {
+            ++$this->_id;
+        }
+
+        public function rewind()
+        {
+            $this->_id = 0;
+        }
+        
+        public function valid()
+        {
+            return (isset($this->segments[$this->_id]));
+        }
+        
+        /**
+         * SPL Countable pattern
+         */
+        
+        public function count()
+        {
+            return count($this->segments);
         }
     }
 }

@@ -6,7 +6,6 @@ namespace Feather\Components\Request
     {
         public function __construct(array $params)
         {
-            // $vars = $_SERVER
             parent::__construct($params);
         }
     }

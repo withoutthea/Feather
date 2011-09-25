@@ -11,6 +11,7 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        spl_autoload_register('\Feather\App\Autoloader::Autoload');
     }
 
     /**
@@ -19,6 +20,7 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        spl_autoload_unregister('\Feather\App\Autoloader::Autoload');
     }
 
     public function testAutoloadFunction()
@@ -31,7 +33,7 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
     
     public function testClassAutoload()
     {
-        spl_autoload_register('\Feather\App\Autoloader::Autoload');
+        //spl_autoload_register('\Feather\App\Autoloader::Autoload');
         $coll = new \Feather\Components\Collections\Collection;
         $this->assertType('\Feather\Components\Collections\Collection', $coll);
     }

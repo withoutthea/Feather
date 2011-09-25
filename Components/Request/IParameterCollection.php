@@ -1,9 +1,9 @@
 <?php
 
-namespace FeatherW\Components\Request
+namespace Feather\Components\Request
 {
-    interface IParameterCollection
+    interface IParameterCollection extends \Feather\Components\Collections\IBasicCollection
     {
-        function getParam($param);
+        
     }
 }

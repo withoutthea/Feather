@@ -11,15 +11,5 @@ namespace Feather\Components\Request
                 $this->add($key, $val);
             }
         }
-        
-        public function getParam($param)
-        {
-            if (isset($this->_collection[$param]))
-            {
-                return $this->_collection[$param];
-            }
-            
-            return false;
-        }
     }
 }

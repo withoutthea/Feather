@@ -3,8 +3,6 @@
 namespace Feather\Components\Collections
 {
     
-    use Feather\App\Domain;
-    
     class Collection extends \SplObjectStorage implements ICollection
     {
         public function __construct(array $objects = null)
