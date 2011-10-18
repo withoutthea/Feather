@@ -15,15 +15,20 @@ namespace Feather\App
             if (!defined('DIRECTORY_SEPARATOR'))
             {
                 define('DIRECTORY_SEPARATOR',($os == 'UNIX') ? '/' : '\\');
-                
             }
-            define('DS', \DIRECTORY_SEPARATOR);
+            if (!defined('DS'))
+			{
+				define('DS', \DIRECTORY_SEPARATOR);
+			}
             
             if (!defined('PATH_SEPARATOR'))
             {
                 define('PATH_SEPARATOR', ($os == 'UNIX') ? ':' : ';');
             }
-            define('PS', \PATH_SEPARATOR);
+			if (!defined('PS'))
+			{
+				define('PS', \PATH_SEPARATOR);
+			}
             
             if (!defined('APP_PATH'))
             {

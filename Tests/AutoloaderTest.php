@@ -11,6 +11,7 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+		\Feather\App\Feather::setupEnv();
         spl_autoload_register('\Feather\App\Autoloader::Autoload');
     }
 

@@ -12,7 +12,7 @@ namespace Feather\App
         
         public static function Autoload($class)
         {
-            Feather::setupEnv();
+            //Feather::setupEnv();
             
             // if it doesn't start with \\, add it
             if (\substr($class, 0, 1) !== '\\') $class = '\\' . $class;

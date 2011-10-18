@@ -24,7 +24,7 @@ namespace Feather\Components\Routing
             {
                 if ($routes instanceof \Feather\Components\Routing\RouteCollection)
                 {
-                    $this->setRoutes($routes);
+                    $this->_initCollection($routes);
                 }
                 
                 if ($routes instanceof \Feather\Components\Routing\Route)
@@ -37,9 +37,16 @@ namespace Feather\Components\Routing
             return $this;
         }
         
-        private function _initCollection()
+        private function _initCollection(\Feather\Components\Routing\RouteCollection $collection = null)
         {
-            $this->_routes = new \Feather\Components\Routing\RouteCollection();
+			if (null === $collection)
+			{
+				$this->_routes = new \Feather\Components\Routing\RouteCollection();
+			}
+			else
+			{
+				$this->_routes = $collection;
+			}
         }
         
         public function getRoute()

@@ -77,6 +77,16 @@ namespace Feather\Data\Connections
                 $this->_mysql->close();
             $this->_isConnected = false;
         }
+		
+		public function commit()
+		{
+			
+		}
+		
+		public function rollback()
+		{
+			
+		}
         
         public function query($query)
         {
