@@ -27,7 +27,7 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
     public function testAutoloadFunction()
     {
         $this->assertEquals(
-            dirname(dirname(__FILE__)) . '\\Components\\Collections\\Collection.php',
+            dirname(dirname(__FILE__)) . DS.'Components'.DS.'Collections'.DS.'Collection.php',
             \Feather\App\Autoloader::Autoload('\\Feather\\Components\\Collections\\Collection')
         );
     }

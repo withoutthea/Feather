@@ -20,18 +20,17 @@ namespace Feather\Components\Routing
         
         public function __construct($routes = null)
         {
-            if (null !== $routes)
+            if ($routes instanceof \Feather\Components\Routing\RouteCollection)
             {
-                if ($routes instanceof \Feather\Components\Routing\RouteCollection)
-                {
-                    $this->_initCollection($routes);
-                }
-                
-                if ($routes instanceof \Feather\Components\Routing\Route)
-                {
-                    $this->_initCollection();
-                    $this->addRoute($routes);
-                }
+                $this->_initCollection($routes);
+            }
+            elseif ($routes instanceof \Feather\Components\Routing\Route)
+            {
+                $this->_initCollection()->addRoute($routes);
+            }
+            else
+            {
+                $this->_initCollection();
             }
             
             return $this;
@@ -47,6 +46,8 @@ namespace Feather\Components\Routing
 			{
 				$this->_routes = $collection;
 			}
+            
+            return $this;
         }
         
         public function getRoute()
@@ -54,9 +55,9 @@ namespace Feather\Components\Routing
             return $this->_route;
         }
         
-        public function setRoute(\Feather\Components\Routing\Route $route)
+        public function addRoute(\Feather\Components\Routing\Route $route)
         {
-            $this->_route = $route;
+            $this->_routes->add($route);
             
             return $this;
         }

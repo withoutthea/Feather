@@ -26,7 +26,7 @@ class SeparatorConstantsTest extends PHPUnit_Framework_TestCase
     public function testShortDirectorySeparatorConstantFunction()
     {
         $this->assertEquals(
-            '\\',
+            DIRECTORY_SEPARATOR,
             DS
         );
     }
@@ -35,7 +35,7 @@ class SeparatorConstantsTest extends PHPUnit_Framework_TestCase
     public function testShortPathSeparatorConstantFunction()
     {
         $this->assertEquals(
-            ';',
+            PATH_SEPARATOR,
             PS
         );
     }
