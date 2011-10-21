@@ -12,8 +12,6 @@ namespace Feather\App
         
         public static function Autoload($class)
         {
-            //Feather::setupEnv();
-            
             // if it doesn't start with \\, add it
             if (\substr($class, 0, 1) !== '\\') $class = '\\' . $class;
             
@@ -24,6 +22,11 @@ namespace Feather\App
             }
             
             return self::LoadClass(self::GetClassPath($class));
+        }
+        
+        public static function CheckForClass($class)
+        {
+            
         }
         
         private static function GeneratePath($class)
