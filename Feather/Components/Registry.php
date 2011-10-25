@@ -1,6 +1,6 @@
 <?php
 
-namespace Feather\App
+namespace Feather\Components
 {
     /**
      * Feather's adaptation of the Zend_Regsitry.
@@ -11,11 +11,11 @@ namespace Feather\App
          * Class name of the singleton registry object.
          * @var string
          */
-        private static $_registryClassName = '\Feather\App\Registry';
+        private static $_registryClassName = '\Feather\Components\Registry';
 
         /**
          * Registry object provides storage for shared objects.
-         * @var \Feather\App\Registry
+         * @var \Feather\Components\Registry
          */
         private static $_registry = null;
 
@@ -26,7 +26,8 @@ namespace Feather\App
          */
         public static function getInstance()
         {
-            if (self::$_registry === null) {
+            if (self::$_registry === null)
+            {
                 self::init();
             }
 

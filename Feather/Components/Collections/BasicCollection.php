@@ -21,9 +21,9 @@ namespace Feather\Components\Collections
             $this->rewind();
         }
         
-        public function add($key, $value)
+        public function add($value)
         {
-            $this->_collection[$key] = $value;
+            $this->_collection[] = $value;
             $this->count++;
             
             return $this;
@@ -35,7 +35,7 @@ namespace Feather\Components\Collections
             {
                 foreach ($values as $key => $val)
                 {
-                    $this->add($key, $val);
+                    $this->add($val);
                 }
             }
         }
@@ -60,14 +60,14 @@ namespace Feather\Components\Collections
             unset($this->_collection);
         }
         
-        public function contains($key)
+        public function contains($value)
         {
-            return isset($this->_collection[$key]);
+            return in_array($value, $this->_collection);
         }
         
         public function get($key)
         {
-            if ($this->contains($key))
+            if (array_key_exists($key, $this->_collection))
             {
                 return $this->_collection[$key];
             }
@@ -79,7 +79,7 @@ namespace Feather\Components\Collections
         {
             if ($this->count > 0)
             {
-                return array_slice($this->_collection, 0, 1);
+                return $this->_collection[0];
             }
             
             return false;

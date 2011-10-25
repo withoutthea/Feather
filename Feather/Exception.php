@@ -1,8 +1,8 @@
 <?php
 
-namespace Feather\Exceptions
+namespace Feather
 {
-    class FeatherException extends \Exception
+    class Exception extends \Exception
     {
         public function __construct($message = null, $code = 0, Exception $previous = null)
         {

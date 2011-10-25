@@ -3,7 +3,7 @@
 namespace Feather\Components\Collections
 {
     
-    class Collection extends \SplObjectStorage implements ICollection
+    class GenericObjectCollection extends \SplObjectStorage implements IGenericObjectCollection, \Iterator
     {
         public function __construct(array $objects = null)
         {
@@ -13,9 +13,9 @@ namespace Feather\Components\Collections
             }
         }
         
-        public function add(\Feather\App\Domain\IObject $obj, $data = null)
+        public function add(\Feather\IObject $obj, $hash = null)
         {
-            $this->attach($obj, $data);
+            $this->attach($obj, $hash);
             return $this;
         }
         
@@ -30,11 +30,14 @@ namespace Feather\Components\Collections
             }
         }
         
-        public function remove(\Feather\App\Domain\IObject $obj)
+        public function remove($item)
         {
-            if ($this->contains($obj))
+            if (!($item instanceof \Feather\IObject))
+                // throw new CannotRemoveNonObjectFromObjectCollectionException();
+                
+            if ($this->contains($item))
             {
-                $this->detach($obj);
+                $this->detach($item);
             }
             
             return $this;
@@ -50,9 +53,12 @@ namespace Feather\Components\Collections
             }
         }
         
-        public function contains(\Feather\App\Domain\IObject $obj)
+        public function contains($search)
         {
-            return parent::contains($obj);
+            if (!($search instanceof \Feahter\IObject))
+                return false;
+                
+            return parent::contains($search);
         }
     }
 }

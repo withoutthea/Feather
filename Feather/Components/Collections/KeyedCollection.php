@@ -3,7 +3,7 @@
 namespace Feather\Components\Collections
 {
     
-    class SimpleCollection implements ISimpleCollection, \Iterator
+    class KeyedCollection implements IKeyedCollection, \Iterator
     {
         public $count = 0;
         
@@ -21,9 +21,9 @@ namespace Feather\Components\Collections
             $this->rewind();
         }
         
-        public function add($value)
+        public function add($key, $value)
         {
-            $this->_collection[] = $value;
+            $this->_collection[$key] = $value;
             $this->count++;
             
             return $this;
@@ -35,7 +35,7 @@ namespace Feather\Components\Collections
             {
                 foreach ($values as $key => $val)
                 {
-                    $this->add($val);
+                    $this->add($key, $val);
                 }
             }
         }
@@ -60,14 +60,14 @@ namespace Feather\Components\Collections
             unset($this->_collection);
         }
         
-        public function contains($value)
+        public function contains($key)
         {
-            return in_array($value, $this->_collection);
+            return isset($this->_collection[$key]);
         }
         
         public function get($key)
         {
-            if (array_key_exists($key, $this->_collection))
+            if ($this->contains($key))
             {
                 return $this->_collection[$key];
             }
@@ -79,7 +79,7 @@ namespace Feather\Components\Collections
         {
             if ($this->count > 0)
             {
-                return $this->_collection[0];
+                return array_slice($this->_collection, 0, 1);
             }
             
             return false;
