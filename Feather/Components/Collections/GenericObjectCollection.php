@@ -55,7 +55,7 @@ namespace Feather\Components\Collections
         
         public function contains($search)
         {
-            if (!($search instanceof \Feahter\IObject))
+            if (!($search instanceof \Feather\IObject))
                 return false;
                 
             return parent::contains($search);

@@ -51,11 +51,36 @@ namespace Feather\Components\Collections
         
         public function remove($item)
         {
-            if ($this->contains($obj))
+            // if an instance of IObject is passed
+            if (($item instanceof \Feather\IObject) && $this->contains($obj))
             {
-                unset($this->_collection[]);
+                $this->_removeByHash(spl_object_hash($item));
+            }
+            elseif (is_array($item))
+            {
+                if (count($item) > 1)
+                {
+                    // assume each array item is an object
+                }
+                else
+                {
+                    // assume key is hash, value is object
+                }
+            }
+            else
+            {
+                if (!is_array($item) && !($item instanceof \Feather\IObject))
+                {
+                    // assume just the hash was passed
+                }
             }
             
+            return $this;
+        }
+        
+        private function _removeByHash($hash)
+        {
+            unset($this->_collection[$hash]);
             return $this;
         }
         
@@ -69,9 +94,46 @@ namespace Feather\Components\Collections
             }
         }
         
-        public function contains(\Feather\IObject $obj)
+        public function contains($search)
         {
-            return parent::contains($obj);
+            if (!($search instanceof \Feather\IObject))
+                return false;
+                
+            return parent::contains($search);
+        }
+        
+        public function find($search)
+        {
+            
+        }
+        
+        /**
+         * Implementing the SPL Iterator pattern for further compatibility
+         */
+
+        public function current()
+        {
+            return $this->_collection[$this->_id];
+        }
+
+        public function key()
+        {
+            return $this->_id;
+        }
+
+        public function next()
+        {
+            ++$this->_id;
+        }
+
+        public function rewind()
+        {
+            $this->_id = 0;
+        }
+        
+        public function valid()
+        {
+            return (isset($this->_collection[$this->_id]));
         }
     }
 }
