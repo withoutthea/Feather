@@ -60,5 +60,10 @@ namespace Feather\Components\Collections
                 
             return parent::contains($search);
         }
+
+        public function dump()
+        {
+            // @TODO -> Implement dump method.
+        }
     }
 }

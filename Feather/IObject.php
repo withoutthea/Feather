@@ -1,6 +1,6 @@
 <?php
 
-namespace Feather\App\Domain
+namespace Feather
 {
     interface IObject
     {

@@ -10,7 +10,7 @@ namespace Feather\Components\Collections
      * List<T> object and LINQ queries.  No, it's not meant to be exactly that, but the
      * inspiration behind it is clearly there.
      */
-    class ObjectCollection implements IObjectCollection, \Iterator
+    class ObjectCollection implements \Feather\Components\Collections\IObjectCollection, \Iterator
     {
         public $count = 0;
         
@@ -52,7 +52,7 @@ namespace Feather\Components\Collections
         public function remove($item)
         {
             // if an instance of IObject is passed
-            if (($item instanceof \Feather\IObject) && $this->contains($obj))
+            if (($item instanceof \Feather\IObject) && $this->contains($item))
             {
                 $this->_removeByHash(spl_object_hash($item));
             }
@@ -60,11 +60,22 @@ namespace Feather\Components\Collections
             {
                 if (count($item) > 1)
                 {
-                    // assume each array item is an object
+                    // each array item is an object
+                    if (key($item) != spl_object_hash(current($item)))
+                    {
+                        foreach ($item as $key => $obj)
+                        {
+                            $this->_removeByHash(spl_object_hash($obj));
+                        }
+                    }
                 }
                 else
                 {
-                    // assume key is hash, value is object
+                    // key is hash, value is object
+                    foreach ($item as $key => $obj)
+                    {
+                        $this->_removeByHash($key);
+                    }
                 }
             }
             else
@@ -72,6 +83,7 @@ namespace Feather\Components\Collections
                 if (!is_array($item) && !($item instanceof \Feather\IObject))
                 {
                     // assume just the hash was passed
+                    $this->_removeByHash($item);
                 }
             }
             
@@ -86,23 +98,82 @@ namespace Feather\Components\Collections
         
         public function clear()
         {
-            $this->rewind();
-            while ($this->count() > 0)
-            {
-                $this->detach($this->current());
-                $this->rewind();
-            }
+            $this->_collection = array();
         }
         
         public function contains($search)
         {
-            if (!($search instanceof \Feather\IObject))
-                return false;
-                
-            return parent::contains($search);
+            return array_key_exists(spl_object_hash($search), $this->_collection);
         }
         
-        public function find($search)
+        public function find(\Feather\Components\Collections\CollectionQuery $search)
+        {
+            $matches = array();
+
+            foreach ($this->_collection as $obj)
+            {
+                $test = false;
+                
+                if ($search->getType() === 'and')
+                {
+                    while ($search->getQuery())
+                    {
+                        $key = 'get' . $search->getKey();
+                        if ($obj->$key() === $search->getValue())
+                        {
+                            $test = true;
+                            continue;
+                        }
+                        
+                        $test = false;
+                        break;
+                    }
+                    
+                    if ($test)
+                    {
+                        $matches[] = $obj;
+                    }
+                    
+                    $search->resetQuery();
+                }
+                
+                if ($search->getType() === 'or')
+                {
+                    while ($search->getQuery())
+                    {
+                        $key = 'get' . $search->getKey();
+                        if ($obj->$key() === $search->getValue())
+                        {
+                            $test = true;
+                            break;
+                        }
+                        
+                        continue;
+                    }
+                    
+                    if ($test)
+                    {
+                        $matches[] = $obj;
+                    }
+                    
+                    $search->resetQuery();
+                }
+            }
+            
+            return $matches;
+        }
+        
+        public function first()
+        {
+            
+        }
+        
+        public function last()
+        {
+            
+        }
+        
+        public function dump()
         {
             
         }
@@ -110,6 +181,11 @@ namespace Feather\Components\Collections
         /**
          * Implementing the SPL Iterator pattern for further compatibility
          */
+        
+        public function count()
+        {
+            return count($this->_collection);
+        }
 
         public function current()
         {

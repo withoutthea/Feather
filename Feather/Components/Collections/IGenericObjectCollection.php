@@ -13,8 +13,6 @@ namespace Feather\Components\Collections
         public function remove($item);
         public function clear();
         public function contains($search);
-        public function first();
-        public function last();
         public function dump();
     }
 }
