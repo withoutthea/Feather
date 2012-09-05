@@ -1,12 +1,9 @@
 <?php
 
 require_once dirname(__FILE__).'/../../../Feather/IObject.php';
-require_once dirname(__FILE__).'/../../../Feather/Components/Collections/CollectionQuery.php';
-require_once dirname(__FILE__).'/../../../Feather/Components/Collections/IGenericObjectCollection.php';
-require_once dirname(__FILE__).'/../../../Feather/Components/Collections/IObjectCollection.php';
-require_once dirname(__FILE__).'/../../../Feather/Components/Collections/ObjectCollection.php';
+require_once dirname(__FILE__).'/../../../Feather/Components/Autoloader.php';
 
-class TestObject implements \Feather\IObject
+class ObjectCollectionTestObject implements \Feather\IObject
 {
     private $id;
     private $name;
@@ -29,6 +26,11 @@ class ObjectCollectionTest extends PHPUnit_Framework_TestCase
      * @var \Feather\Components\Collections\ObjectCollection
      */
     protected $object;
+    
+    /**
+     * @var \Feather\Components\Autoloader
+     */
+    protected $autoloader;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -36,6 +38,9 @@ class ObjectCollectionTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        $this->autoloader = new \Feather\Components\Autoloader();
+        $this->autoloader->register();
+        
         $this->object = new \Feather\Components\Collections\ObjectCollection;
     }
 
@@ -50,8 +55,8 @@ class ObjectCollectionTest extends PHPUnit_Framework_TestCase
 
     public function testAdd()
     {
-        $obj = new TestObject(1, 'TestAddObject');
-        $this->assertType(
+        $obj = new ObjectCollectionTestObject(1, 'TestAddObject');
+        $this->assertInstanceOf(
             '\Feather\Components\Collections\ObjectCollection',
             $this->object->add($obj)
         );
@@ -59,7 +64,7 @@ class ObjectCollectionTest extends PHPUnit_Framework_TestCase
     
     public function testRemove()
     {
-        $obj = new TestObject(1, 'TestRemoveObject');
+        $obj = new ObjectCollectionTestObject(1, 'TestRemoveObject');
         $this->object->add($obj);
         $this->object->remove($obj);
         $this->assertFalse($this->object->contains($obj));
@@ -67,15 +72,15 @@ class ObjectCollectionTest extends PHPUnit_Framework_TestCase
     
     public function testContains()
     {
-        $obj = new TestObject(1, 'TestContainsObject');
+        $obj = new ObjectCollectionTestObject(1, 'TestContainsObject');
         $this->object->add($obj);
         $this->assertTrue($this->object->contains($obj));
     }
     
     public function testClear()
     {
-        $obj1 = new TestObject(1, 'TestClearObject1');
-        $obj2 = new TestObject(2, 'TestClearObject2');
+        $obj1 = new ObjectCollectionTestObject(1, 'TestClearObject1');
+        $obj2 = new ObjectCollectionTestObject(2, 'TestClearObject2');
         $this->object->addFromArray(array($obj1, $obj2));
         $this->object->clear();
         $this->assertEquals(0, $this->object->count());
@@ -83,9 +88,9 @@ class ObjectCollectionTest extends PHPUnit_Framework_TestCase
     
     public function testFindwithAnd()
     {
-        $obj1 = new TestObject(1, 'One');
-        $obj2 = new TestObject(2, 'Two');
-        $obj3 = new TestObject(3, 'Three');
+        $obj1 = new ObjectCollectionTestObject(1, 'One');
+        $obj2 = new ObjectCollectionTestObject(2, 'Two');
+        $obj3 = new ObjectCollectionTestObject(3, 'Three');
         $this->object->addFromArray(array($obj1, $obj2, $obj3));
         
         $search1 = new \Feather\Components\Collections\CollectionQuery('and');
@@ -99,9 +104,9 @@ class ObjectCollectionTest extends PHPUnit_Framework_TestCase
     
     public function testFindwithOr()
     {
-        $obj1 = new TestObject(1, 'One');
-        $obj2 = new TestObject(2, 'Two');
-        $obj3 = new TestObject(3, 'Three');
+        $obj1 = new ObjectCollectionTestObject(1, 'One');
+        $obj2 = new ObjectCollectionTestObject(2, 'Two');
+        $obj3 = new ObjectCollectionTestObject(3, 'Three');
         $this->object->addFromArray(array($obj1, $obj2, $obj3));
         
         $search1 = new \Feather\Components\Collections\CollectionQuery('or');

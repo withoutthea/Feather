@@ -57,7 +57,7 @@ namespace Feather\Components\Collections
             if ($this->_iteration < count($this->_queryParameters) - 1)
             {
                 $this->_iteration++;
-                echo 'iteration now: '.$this->_iteration;
+                //echo 'iteration now: '.$this->_iteration;
                 return true;
             }
             else

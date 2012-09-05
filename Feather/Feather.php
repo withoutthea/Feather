@@ -1,6 +1,6 @@
 <?php
 
-namespace Feather\App
+namespace Feather
 {
     final class Feather
     {

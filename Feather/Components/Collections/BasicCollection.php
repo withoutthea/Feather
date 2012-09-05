@@ -21,9 +21,9 @@ namespace Feather\Components\Collections
             $this->rewind();
         }
         
-        public function add($value)
+        public function add($key, $value = null)
         {
-            $this->_collection[] = $value;
+            $this->_collection[] = $key;
             $this->count++;
             
             return $this;
@@ -65,7 +65,7 @@ namespace Feather\Components\Collections
             return in_array($value, $this->_collection);
         }
         
-        public function get($key)
+        public function get($key = null)
         {
             if (array_key_exists($key, $this->_collection))
             {
@@ -93,6 +93,18 @@ namespace Feather\Components\Collections
             }
             
             return false;
+        }
+        
+        public function dump()
+        {
+            $dump = "<p><ul>";
+            foreach ($this->_collection as $key => $value)
+            {
+                $dump .= "<li>Key #" . $key . " = " . $value . "</li>";
+            }
+            $dump .= "</ul></p>";
+            
+            return $dump;
         }
         
         /**

@@ -58,7 +58,6 @@ namespace Feather\Components\Routing
         public function addRoute(\Feather\Components\Routing\Route $route)
         {
             $this->_routes->add($route);
-            
             return $this;
         }
         
@@ -70,7 +69,7 @@ namespace Feather\Components\Routing
         public function match(\Feather\Components\Request\Uri $uri)
         {
             // if there isn't a route set for this matcher, return false
-            if (empty($this->_route))
+            if (empty($this->_routes))
             {
                 return false;
             }
@@ -93,7 +92,7 @@ namespace Feather\Components\Routing
                 {
                     $position++;
 
-                    echo "route: " . $route->getSegment($position) . ' :: segment: ' . $segment;
+                    //echo "route: " . $route->getSegment($position) . ' :: segment: ' . $segment;
                     if ($route->getSegment($position) == '*')
                         break;
 

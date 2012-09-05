@@ -10,7 +10,7 @@
  */
 namespace Feather\Components\Routing
 {
-    class Route implements \Iterator, \Countable, \Feather\App\Domain\IObject
+    class Route implements \Iterator, \Countable, \Feather\IObject
     {
 
         protected $url;
@@ -179,7 +179,8 @@ namespace Feather\Components\Routing
         
         public function __toString()
         {
-            // @TODO -> Implement
+            // @TODO -> Implement a better dump
+            return $this->url;
         }
         
         /**

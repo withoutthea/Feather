@@ -1,9 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../../Components/Routing/Matcher.php';
-require_once dirname(__FILE__) . '/../../../Components/Routing/Route.php';
-require_once dirname(__FILE__) . '/../../../Components/Routing/RouteCollection.php';
-require_once dirname(__FILE__) . '/../../../Components/Request/Uri.php';
+require_once dirname(__FILE__).'/../../../Feather/Components/Autoloader.php';
 
 /**
  * Test class for Matcher.
@@ -15,12 +12,20 @@ class MatcherTest extends PHPUnit_Framework_TestCase {
      * @var Matcher
      */
     protected $object;
+    
+    /**
+     * @var \Feather\Components\Autoloader
+     */
+    protected $autoloader;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
     protected function setUp() {
+        $this->autoloader = new \Feather\Components\Autoloader();
+        $this->autoloader->register();
+        
         $this->object = new \Feather\Components\Routing\Matcher;
     }
 

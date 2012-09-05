@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(dirname(__FILE__)).'/../App/Feather.php';
+require_once dirname(dirname(__FILE__)).'/../Feather/Feather.php';
 
 class SeparatorConstantsTest extends PHPUnit_Framework_TestCase
 {

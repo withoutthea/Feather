@@ -2,7 +2,7 @@
 
 namespace Feather\Components\Routing
 {
-    class RouteCollection extends \Feather\Components\Collections\Collection
+    class RouteCollection extends \Feather\Components\Collections\BasicCollection
     {
         
     }
