@@ -38,7 +38,7 @@ namespace Feather\Data\Connections
         
         private function __construct(\Feather\Data\Connections\IConnectionParameters $parameters = false)
         {
-            if (!$_isConnected)
+            if (!$this->_isConnected)
             {
                 if (!$parameters)
                     $parameters = \Feather\App\Registry::get('ConnectionParameters');
@@ -46,8 +46,8 @@ namespace Feather\Data\Connections
                 $this->connect($parameters);
             }
             
-            $this->_queries = new \Feather\Components\Collections\SimpleCollection();
-            $this->_errors = new \Feather\Components\Collections\SimpleCollection();
+            $this->_queries = new \Feather\Components\Collections\BasicCollection();
+            $this->_errors = new \Feather\Components\Collections\BasicCollection();
             $this->_numberOfAffectedRows = $this->_numberOfRows = $this->_lastInsertId = 0;
             $this->_lastResult = $this->_hasError = false;
         }
@@ -67,7 +67,8 @@ namespace Feather\Data\Connections
             if ($this->_mysql->connect_error)
             {
                 $this->_isConnected = false;
-                throw new \Feather\Exceptions\MySqlConnectionException();
+                $this->_hasError = true;
+                throw new \Feather\Data\Connections\MySqlConnectionException();
             }
         }
         
@@ -77,15 +78,41 @@ namespace Feather\Data\Connections
                 $this->_mysql->close();
             $this->_isConnected = false;
         }
+        
+        public function beginTransaction()
+        {
+            if (!$this->_isConnected)
+                throw new \Feather\Data\Connections\MySqlNotConnectedException();
+            
+            $this->_mysql->autocommit(false);
+            return $this;
+        }
+        
+        public function endTransaction()
+        {
+            if (!$this->_isConnected)
+                throw new \Feather\Data\Connections\MySqlNotConnectedException();
+            
+            $this->_mysql->autocommit(true);
+            return $this;
+        }
 		
 		public function commit()
 		{
-			
+			if (!$this->_isConnected)
+                throw new \Feather\Data\Connections\MySqlNotConnectedException();
+            
+            $this->_mysql->commit();
+            return $this;
 		}
 		
 		public function rollback()
 		{
-			
+			if (!$this->_isConnected)
+                throw new \Feather\Data\Connections\MySqlNotConnectedException();
+            
+            $this->_mysql->rollback();
+            return $this;
 		}
         
         public function query($query)
@@ -100,12 +127,13 @@ namespace Feather\Data\Connections
                 {
                     $this->_hasError = true;
                     $this->_errors->add($this->_mysql->error);
-                    throw new \Feather\Exceptions\MySqlQueryException($this->_mysql->error, $this->_mysql->errno);
+                    throw new \Feather\Data\Connections\MySqlQueryException($this->_mysql->error, $this->_mysql->errno);
                 }
                 
                 return $this;
             }
             
+            throw new \Feather\Exceptions\MySqlNotConnectedException();
             return false;
         }
         
@@ -117,6 +145,7 @@ namespace Feather\Data\Connections
         // @TODO -> Implement insert function
         // @TODO -> Implement update function
         // @TODO -> Implement delete function
+        // @TODO -> Implement prepared statements
         
         public function fetchAssoc(\mysqli_result $result = null)
         {

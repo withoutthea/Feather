@@ -3,7 +3,7 @@
 namespace Feather\Components\Collections
 {
     
-    class KeyedCollection implements IKeyedCollection, \Iterator
+    class KeyedCollection implements IKeyedCollection, \Iterator, \ArrayAccess
     {
         public $count = 0;
         
@@ -124,6 +124,47 @@ namespace Feather\Components\Collections
         public function valid()
         {
             return (isset($this->_collection[$this->_id]));
+        }
+        
+        /**
+         * Implementing ArrayAccess pattern - beta
+         */
+        
+        public function offsetExists($key)
+        {
+            return isset($this->_collection[$key]);
+        }
+
+        public function offsetGet($key)
+        {
+            if($this->offsetExists($key))
+            {
+                return $this->_collection[$key];
+            }
+            
+            return false;
+        }
+
+        public function offsetSet($key, $value)
+        {
+            // limiting the array key to a string, rather than overwrite a numeric value
+            //if (is_string($key)) {
+            if ($key)
+            {
+                $this->_collection[$key] = $value;
+            }
+            else
+            {
+                $this->_collection[] = $value;
+            }
+            
+            return true;
+        }
+
+        public function offsetUnset($key)
+        {
+            unset($this->_collection[$key]);
+            return true;
         }
     }
 }

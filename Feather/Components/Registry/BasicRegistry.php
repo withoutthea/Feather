@@ -2,7 +2,8 @@
 
 namespace Feather\Components\Registry
 {
-    class BasicRegistry extends \Feather\Components\Collections\SimpleCollection
+    // @TODO -> Determine why I created this and whether it's actually needed ...
+    class BasicRegistry extends \Feather\Components\Collections\BasicCollection
     {
         
     }

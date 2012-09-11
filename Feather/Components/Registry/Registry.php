@@ -4,8 +4,22 @@ namespace Feather\Components\Registry
 {
     class Registry
     {
+        /**
+         *
+         * @var type \Feather\Components\Registry
+         */
         private $_instance;
+        
+        /**
+         *
+         * @var type \Feather\Components\Collections\KeyedCollection
+         */
         private $_registry;
+        
+        /**
+         *
+         * @var type bool
+         */
         private $_overwrite;
         
         public static function getRegistry(bool $overwrite = false)
@@ -20,7 +34,7 @@ namespace Feather\Components\Registry
         
         private function __construct($overwrite)
         {
-            $this->_registry = array();
+            $this->_registry = new \Feather\Components\Collections\KeyedCollection();
             $this->setOverwrite($overwrite);
         }
         
@@ -36,6 +50,9 @@ namespace Feather\Components\Registry
         
         public function setValue($key, $val)
         {
+            if ($this->hasKey($key) && !$this->_overwrite)
+                throw new RegistryKeyAlreadyExistsException();
+            
             $this->_registry[$key] = $val;
         }
         
@@ -47,14 +64,11 @@ namespace Feather\Components\Registry
                 return false;
             }
             
-            return $this->_getValue($key);
+            return $this->getValue($key);
         }
         
         public function __set($key, $val)
         {
-            if ($this->hasKey($key) && !$this->_overwrite)
-                throw new RegistryKeyAlreadyExistsException();
-            
             $this->setValue($key, $val);
         }
         

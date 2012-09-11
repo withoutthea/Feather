@@ -1,8 +1,8 @@
 <?php
 
-namespace Feather\Components\Data
+namespace Feather\Data\Connections
 {
-    class MySqlConnectionException extends \Feather\Exceptions\FeaterException
+    class MySqlConnectionException extends \Feather\Exception
     {
         
     }
